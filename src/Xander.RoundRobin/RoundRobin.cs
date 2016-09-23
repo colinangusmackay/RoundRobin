@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Xander.RoundRobin
@@ -10,16 +11,15 @@ namespace Xander.RoundRobin
 
         private int _currentIndex = -1;
 
-        public RoundRobin(IEnumerable<T> items)
+        public RoundRobin(IEnumerable<T> sequence)
         {
-            _items = items.ToArray();
+            _items = sequence.ToArray();
+            if (_items.Length == 0)
+                throw new ArgumentException("Sequence contains no elements.", nameof(sequence));
         }
 
         public T GetNextItem()
         {
-            if (_items.Length == 0)
-                return default(T);
-
             lock (this._syncLock)
             {
                 _currentIndex++;

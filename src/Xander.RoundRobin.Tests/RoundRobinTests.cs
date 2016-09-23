@@ -11,13 +11,6 @@ namespace Xander.RoundRobin.Tests
     public class RoundRobinTests
     {
         [Test]
-        public void Returns_Null_When_There_Are_No_Items()
-        {
-            var cut = new RoundRobin<int>(new int[0]);
-            cut.GetNextItem().ShouldBe(default(int));
-        }
-
-        [Test]
         public void Returns_Repeating_Sequence_When_Called_Repeatedly()
         {
             var sequence = new[] { 10, 20, 30 };
@@ -48,6 +41,13 @@ namespace Xander.RoundRobin.Tests
             items.Count(i => i == 10).ShouldBe(rounds);
             items.Count(i => i == 20).ShouldBe(rounds);
             items.Count(i => i == 30).ShouldBe(rounds);
+        }
+
+        [Test]
+        public void Round_Robin_Must_Not_Be_Given_An_Empty_Sequence()
+        {
+            Should.Throw<ArgumentException>( () => new RoundRobin<int>(new int[0]))
+                .Message.ShouldBe($"Sequence contains no elements.{Environment.NewLine}Parameter name: sequence");
         }
     }
 }
