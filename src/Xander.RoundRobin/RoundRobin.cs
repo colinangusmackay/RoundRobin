@@ -6,6 +6,7 @@ namespace Xander.RoundRobin
     public class RoundRobin<T>
     {
         private readonly T[] _items;
+        private readonly object _syncLock = new object();
 
         private int _currentIndex = -1;
 
@@ -19,10 +20,13 @@ namespace Xander.RoundRobin
             if (_items.Length == 0)
                 return default(T);
 
-            _currentIndex++;
-            if (_currentIndex >= _items.Length)
-                _currentIndex = 0;
-            return _items[_currentIndex];
+            lock (this._syncLock)
+            {
+                _currentIndex++;
+                if (_currentIndex >= _items.Length)
+                    _currentIndex = 0;
+                return _items[_currentIndex];
+            }
         }
     }
 }
